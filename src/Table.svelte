@@ -2,7 +2,9 @@
   import { onMount } from "svelte";
   import Loader from "./components/Loader.svelte";
   import Pagination from "./components/Pagination.svelte";
+
   let list = [];
+  let pageSize = 25;
   function optimizeQuestionList(questions) {
     list = questions
       .map(question => {
@@ -14,14 +16,17 @@
           titleSlug: stat.question__title_slug
         };
       })
-      .sort((a, b) => a.frontendQuestionId - b.frontendQuestionId)
-      .slice(0, 50);
+      .sort((a, b) => a.frontendQuestionId - b.frontendQuestionId);
   }
   async function fetchQuestions() {
     const questions = await fetch(
       "https://leetcode.com/api/problems/all/"
     ).then(r => r.json());
     optimizeQuestionList(questions.stat_status_pairs);
+  }
+
+  function handlePageSizeChanged(event) {
+    pageSize = event.detail.pageSize;
   }
 
   onMount(fetchQuestions);
@@ -48,7 +53,7 @@
       </div>
     {:else}
       <tbody>
-        {#each list as question}
+        {#each list.slice(0, pageSize) as question}
           <tr>
             <td>{question.frontendQuestionId}</td>
             <td>
@@ -65,7 +70,9 @@
         {/each}
         <tr class="pagination-content">
           <td colspan="5">
-            <Pagination />
+            <Pagination
+              count={list.length}
+              on:pageSizeChange={handlePageSizeChanged} />
           </td>
         </tr>
       </tbody>

@@ -1,3 +1,15 @@
+<script>
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+  export let count;
+  let selected = 25;
+
+  function handlePageSizeChange() {
+    dispatch("pageSizeChange", { pageSize: +selected });
+  }
+</script>
+
 <style>
   .form-control {
     display: inline-block;
@@ -10,12 +22,15 @@
   }
 </style>
 
-<select class="form-control">
-  <option>25</option>
-  <option>50</option>
-  <option>100</option>
-  <option>200</option>
-  <option>all</option>
+<select
+  class="form-control"
+  bind:value={selected}
+  on:change={handlePageSizeChange}>
+  <option value="25">25</option>
+  <option value="50">50</option>
+  <option value="100">100</option>
+  <option value="200">200</option>
+  <option value={count}>all</option>
 </select>
 <ul class="pagination">
   <li>
