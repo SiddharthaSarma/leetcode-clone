@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import Loader from "./components/Loader.svelte";
-
+  import Pagination from "./components/Pagination.svelte";
   let list = [];
   function optimizeQuestionList(questions) {
     list = questions
@@ -14,7 +14,8 @@
           titleSlug: stat.question__title_slug
         };
       })
-      .sort((a, b) => a.frontendQuestionId - b.frontendQuestionId);
+      .sort((a, b) => a.frontendQuestionId - b.frontendQuestionId)
+      .slice(0, 50);
   }
   async function fetchQuestions() {
     const questions = await fetch(
@@ -25,6 +26,12 @@
 
   onMount(fetchQuestions);
 </script>
+
+<style>
+  .pagination-content {
+    background: #f5f5f5;
+  }
+</style>
 
 <div class="row">
   <table class="table table-striped">
@@ -56,6 +63,11 @@
             </td>
           </tr>
         {/each}
+        <tr class="pagination-content">
+          <td colspan="5">
+            <Pagination />
+          </td>
+        </tr>
       </tbody>
     {/if}
   </table>
