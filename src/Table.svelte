@@ -1,5 +1,6 @@
 <script>
   import { onMount } from "svelte";
+  import Loader from "./components/Loader.svelte";
 
   let list = [];
   function optimizeQuestionList(questions) {
@@ -36,22 +37,28 @@
         <th>Difficulty</th>
       </tr>
     </thead>
-    <tbody>
-      {#each list as question}
-        <tr>
-          <td>{question.frontendQuestionId}</td>
-          <td>
-            <a
-              href="https://leetcode.com/problems/{question.titleSlug}"
-              target="_blank">
-              {question.title}
-            </a>
-          </td>
-          <td>
-            <span class="label label-danger round">Hard</span>
-          </td>
-        </tr>
-      {/each}
-    </tbody>
+    {#if !list.length}
+      <div class="text-center">
+        <Loader />
+      </div>
+    {:else}
+      <tbody>
+        {#each list as question}
+          <tr>
+            <td>{question.frontendQuestionId}</td>
+            <td>
+              <a
+                href="https://leetcode.com/problems/{question.titleSlug}"
+                target="_blank">
+                {question.title}
+              </a>
+            </td>
+            <td>
+              <span class="label label-danger round">Hard</span>
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    {/if}
   </table>
 </div>
