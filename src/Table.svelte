@@ -15,13 +15,11 @@
         };
       })
       .sort((a, b) => a.frontendQuestionId - b.frontendQuestionId);
-    console.log(list);
   }
   async function fetchQuestions() {
     const questions = await fetch(
       "https://leetcode.com/api/problems/all/"
     ).then(r => r.json());
-    console.log(questions.stat_status_pairs);
     optimizeQuestionList(questions.stat_status_pairs);
   }
 
