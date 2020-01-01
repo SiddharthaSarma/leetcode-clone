@@ -6,10 +6,12 @@
   let list = [];
   let pageSize = 25;
   function optimizeQuestionList(questions) {
+    console.log(questions);
     list = questions
       .map(question => {
         let { stat } = question;
         return {
+          difficulty: question.difficulty.level,
           frontendQuestionId: stat.frontend_question_id,
           isPaid: question.isPaid,
           title: stat.question__title,
@@ -44,6 +46,8 @@
       <tr>
         <th>#</th>
         <th>Title</th>
+        <th>Likes</th>
+        <th>Dislikes</th>
         <th>Difficulty</th>
       </tr>
     </thead>
@@ -63,8 +67,16 @@
                 {question.title}
               </a>
             </td>
+            <td>100</td>
+            <td>200</td>
             <td>
-              <span class="label label-danger round">Hard</span>
+              {#if question.difficulty == 1}
+                <span class="label label-success round">Easy</span>
+              {:else if question.difficulty == 2}
+                <span class="label label-warning round">Medium</span>
+              {:else}
+                <span class="label label-danger round">Hard</span>
+              {/if}
             </td>
           </tr>
         {/each}
