@@ -2,12 +2,13 @@
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
-  export let count;
   let selected = 25;
 
   function handlePageSizeChange() {
     dispatch("pageSizeChange", { pageSize: +selected });
   }
+
+  export let count;
 </script>
 
 <style>
@@ -38,20 +39,11 @@
       <span aria-hidden="true">&laquo;</span>
     </a>
   </li>
-  <li>
+  <li class="active">
     <a href="#">1</a>
   </li>
   <li>
     <a href="#">2</a>
-  </li>
-  <li>
-    <a href="#">3</a>
-  </li>
-  <li>
-    <a href="#">4</a>
-  </li>
-  <li>
-    <a href="#">5</a>
   </li>
   <li>
     <a href="#" aria-label="Next">

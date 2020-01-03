@@ -6,7 +6,6 @@
   let list = [];
   let pageSize = 25;
   function optimizeQuestionList(questions) {
-    console.log(questions);
     list = questions
       .map(question => {
         let { stat } = question;
@@ -29,6 +28,7 @@
 
   function handlePageSizeChanged(event) {
     pageSize = event.detail.pageSize;
+    console.log(pageSize);
   }
 
   onMount(fetchQuestions);
