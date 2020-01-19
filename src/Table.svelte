@@ -4,20 +4,39 @@
   import Pagination from "./components/Pagination.svelte";
 
   let list = [];
+  let sort = {
+    sortId: "frontendQuestionId",
+    sortVal: 0 // 0 - ascending  1 - descending
+  };
+  const tableColumns = {
+    frontendQuestionId: "#",
+    title: "Title",
+    likes: "Likes",
+    dislikes: "Dislikes",
+    difficulty: "Difficulty"
+  };
   let pageSize = 25;
   function optimizeQuestionList(questions) {
-    list = questions
-      .map(question => {
-        let { stat } = question;
-        return {
-          difficulty: question.difficulty.level,
-          frontendQuestionId: stat.frontend_question_id,
-          isPaid: question.isPaid,
-          title: stat.question__title,
-          titleSlug: stat.question__title_slug
-        };
-      })
-      .sort((a, b) => a.frontendQuestionId - b.frontendQuestionId);
+    let tempData = questions.map(question => {
+      let { stat } = question;
+      return {
+        difficulty: question.difficulty.level,
+        frontendQuestionId: stat.frontend_question_id,
+        isPaid: question.isPaid,
+        title: stat.question__title,
+        titleSlug: stat.question__title_slug
+      };
+    });
+    list = sortList(tempData, sort.sortId, sort.sortVal);
+  }
+
+  function sortList(list, key, order) {
+    return list.sort((a, b) => {
+      if (order) {
+        return b[key] - a[key];
+      }
+      return a[key] - b[key];
+    });
   }
   async function fetchQuestions() {
     const questions = await fetch(
@@ -31,6 +50,16 @@
     console.log(pageSize);
   }
 
+  function handleSort(columns) {
+    if (sort.sortId === columns[0]) {
+      sort.sortVal = !sort.sortVal;
+    } else {
+      sort.sortVal = 0;
+    }
+    sort.sortId = columns[0];
+    list = sortList(list, sort.sortId, sort.sortVal);
+  }
+
   onMount(fetchQuestions);
 </script>
 
@@ -38,17 +67,27 @@
   .pagination-content {
     background: #f5f5f5;
   }
+  table th {
+    cursor: pointer;
+  }
 </style>
 
 <div class="row">
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>#</th>
-        <th>Title</th>
-        <th>Likes</th>
-        <th>Dislikes</th>
-        <th>Difficulty</th>
+        {#each Object.entries(tableColumns) as columns}
+          <th on:click={() => handleSort(columns)}>
+            {columns[1]}
+            {#if columns[0] == sort.sortId}
+              {#if sort.sortVal == 0}
+                <i class="fa fa-fw fa-sort-asc" />
+              {:else}
+                <i class="fa fa-fw fa-sort-desc" />
+              {/if}
+            {/if}
+          </th>
+        {/each}
       </tr>
     </thead>
     {#if !list.length}
