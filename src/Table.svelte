@@ -8,6 +8,7 @@
     sortId: "frontendQuestionId",
     sortVal: 0 // 0 - ascending  1 - descending
   };
+  let pageSize = 25;
   const tableColumns = {
     frontendQuestionId: "#",
     title: "Title",
@@ -15,9 +16,11 @@
     dislikes: "Dislikes",
     difficulty: "Difficulty"
   };
-  let pageSize = 25;
+
   function optimizeQuestionList(questions) {
-    let tempData = questions.map(question => {
+    let tempData = [];
+    let questionsSlugs = [];
+    tempData = questions.map(question => {
       let { stat } = question;
       return {
         difficulty: question.difficulty.level,
@@ -38,16 +41,14 @@
       return a[key] - b[key];
     });
   }
+
   async function fetchQuestions() {
-    const questions = await fetch(
-      "https://leetcode.com/api/problems/all/"
-    ).then(r => r.json());
+    const questions = await fetch("http://localhost:8050").then(r => r.json());
     optimizeQuestionList(questions.stat_status_pairs);
   }
 
   function handlePageSizeChanged(event) {
     pageSize = event.detail.pageSize;
-    console.log(pageSize);
   }
 
   function handleSort(columns) {
