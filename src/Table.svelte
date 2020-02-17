@@ -17,17 +17,19 @@
     difficulty: "Difficulty"
   };
 
-  function optimizeQuestionList(questions) {
+  function optimizeQuestionList(questions, data) {
     let tempData = [];
     let questionsSlugs = [];
-    tempData = questions.map(question => {
+    tempData = questions.map((question, index) => {
       let { stat } = question;
       return {
         difficulty: question.difficulty.level,
         frontendQuestionId: stat.frontend_question_id,
         isPaid: question.isPaid,
         title: stat.question__title,
-        titleSlug: stat.question__title_slug
+        titleSlug: stat.question__title_slug,
+        likes: data[index].likes,
+        dislikes: data[index].dislikes
       };
     });
     list = sortList(tempData, sort.sortId, sort.sortVal);
@@ -43,8 +45,14 @@
   }
 
   async function fetchQuestions() {
-    const questions = await fetch("http://localhost:8050").then(r => r.json());
-    optimizeQuestionList(questions.stat_status_pairs);
+    const questions = await fetch(
+      "https://leetcode-backend.herokuapp.com/"
+    ).then(r => r.json());
+    const list = await fetch(
+      "https://leetcode-backend.herokuapp.com/likesanddislikes"
+    ).then(res => res.json());
+    console.log(list);
+    optimizeQuestionList(questions.stat_status_pairs, list);
   }
 
   function handlePageSizeChanged(event) {
@@ -107,8 +115,8 @@
                 {question.title}
               </a>
             </td>
-            <td>100</td>
-            <td>200</td>
+            <td>{question.likes}</td>
+            <td>{question.dislikes}</td>
             <td>
               {#if question.difficulty == 1}
                 <span class="label label-success round">Easy</span>
