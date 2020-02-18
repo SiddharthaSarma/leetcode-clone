@@ -32,9 +32,7 @@
         dislikes: data[index].dislikes
       };
     });
-    console.log(tempData);
     list = sortList(tempData, sort.sortId, sort.sortVal);
-    list = tempData;
   }
 
   function sortList(list, key, order) {
@@ -53,7 +51,6 @@
     const list = await fetch(
       "https://leetcode-backend.herokuapp.com/likesanddislikes"
     ).then(res => res.json());
-    console.log(list);
     optimizeQuestionList(questions.stat_status_pairs, list);
   }
 
