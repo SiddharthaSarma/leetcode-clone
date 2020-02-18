@@ -25,14 +25,16 @@
       return {
         difficulty: question.difficulty.level,
         frontendQuestionId: stat.frontend_question_id,
-        isPaid: question.isPaid,
+        isPaid: question.paid_only,
         title: stat.question__title,
         titleSlug: stat.question__title_slug,
         likes: data[index].likes,
         dislikes: data[index].dislikes
       };
     });
+    console.log(tempData);
     list = sortList(tempData, sort.sortId, sort.sortVal);
+    list = tempData;
   }
 
   function sortList(list, key, order) {
@@ -114,6 +116,9 @@
                 target="_blank">
                 {question.title}
               </a>
+              {#if question.isPaid}
+                <i class="fa fa-lock" />
+              {/if}
             </td>
             <td>{question.likes}</td>
             <td>{question.dislikes}</td>
