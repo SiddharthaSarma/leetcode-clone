@@ -78,6 +78,9 @@
   table th {
     cursor: pointer;
   }
+  .mgl-5 {
+    margin-left: 5px;
+  }
 </style>
 
 <div class="row">
@@ -114,7 +117,7 @@
                 {question.title}
               </a>
               {#if question.isPaid}
-                <i class="fa fa-lock" />
+                <i class="fa fa-lock mgl-5" />
               {/if}
             </td>
             <td>{question.likes}</td>
